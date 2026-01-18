@@ -25,3 +25,4 @@ And no, this does no context-aware coloring at all.  Pathnames, URLs,
 this silly thing doesn't recognize any of that, just looks at things
 that might be words.  In US ASCII only. What a crock.
 
+And @AndreaBozzo, as he thought 'it would be cool to be on the readme'.
