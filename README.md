@@ -1,22 +1,115 @@
-## Stop-gap "Help Linus with typos" tool
+# HunspellColorize
 
-My google-fu failed me, and I couldn't find a simple colorizing pager
-that just dealt with basic spelling issues.
+A simple command-line spell-checking colorizer that highlights potentially misspelled words using Hunspell.
 
-This is very much a stop-gap, because the real solution is to teach
-uemacs to do it, but I haven't touched that source tree in years and I
-wanted to test hunspell on something simpler first.
+## Description
 
-This is about as simple as it gets, without being _so_ simple that it is
-useless.  I can do
+HunspellColorize is a lightweight utility that reads text input and highlights words that are not found in the Hunspell dictionary. Originally created as a "stop-gap" tool to help with typo detection in text output, it's particularly useful when integrated with pagers like `less` or as a Git pager.
 
-    export LESS=-FRSX
-    export GIT_PAGER=huncolor
+## Features
 
-and the result is usable, and works reasonably well together with the
-existing git colorization.
+- **Real-time spell checking**: Uses Hunspell library for accurate spell checking
+- **Visual highlighting**: Misspelled words are highlighted in bold using ANSI escape codes
+- **Pipe-friendly**: Works seamlessly with Unix pipes and pagers
+- **Git integration**: Can be used as a Git pager to highlight typos in diffs and logs
+- **Lightweight**: Minimal dependencies and fast execution
 
-And no, this does no context-aware coloring at all.  Pathnames, URLs,
-this silly thing doesn't recognize any of that, just looks at things
-that might be words.  In US ASCII only. What a crock.
+## Prerequisites
 
+- C compiler (gcc, clang, etc.)
+- Hunspell library and development headers
+- US English Hunspell dictionary files
+
+### Installing Dependencies
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install libhunspell-dev hunspell-en-us
+```
+
+**Fedora/RHEL:**
+```bash
+sudo dnf install hunspell-devel hunspell-en-US
+```
+
+**macOS:**
+```bash
+brew install hunspell
+```
+
+## Building
+
+```bash
+make
+```
+
+This will compile the `huncolor` executable.
+
+## Installation
+
+To install to your local bin directory:
+```bash
+make install
+```
+
+Or manually copy the executable:
+```bash
+cp huncolor ~/bin/
+# or
+sudo cp huncolor /usr/local/bin/
+```
+
+## Usage
+
+### Basic Usage
+```bash
+# Check a file
+huncolor < textfile.txt
+
+# Pipe from another command
+echo "This is a sentance with a typo" | huncolor
+
+# Use with less pager
+cat document.txt | huncolor | less
+```
+
+### Git Integration
+Set as your Git pager to highlight typos in commits and diffs:
+```bash
+export GIT_PAGER=huncolor
+export LESS=-FRSX
+
+# Now git commands will highlight typos
+git log
+git diff
+git show
+```
+
+### Advanced Usage
+```bash
+# Combine with other tools
+grep "TODO" source.c | huncolor
+man some_command | huncolor
+```
+
+## Configuration
+
+The tool currently uses US English dictionary files located at:
+- `/usr/share/hunspell/en_US.aff`
+- `/usr/share/hunspell/en_US.dic`
+
+## Limitations
+
+- Only supports US ASCII text
+- Uses US English dictionary only
+- No context-aware spell checking
+- Does not recognize URLs, file paths, or code syntax
+- Simple word-by-word analysis without grammar checking
+
+## Contributing
+
+This is a simple utility, but contributions are welcome! Please feel free to:
+- Report bugs
+- Suggest improvements
+- Submit pull requests
+- Add support for other languages/dictionaries
