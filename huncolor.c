@@ -1,3 +1,5 @@
+#include "xdg_dirs.h"
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -187,7 +189,16 @@ int main(int argc, char **argv)
 	if (isatty(0))
 		exec_less(argv);
 
-	Hunhandle *hunhandle = Hunspell_create(aff_path, dic_path);
+	size_t aff_path_len = find_affix_file(buf, BUFSIZE);
+	size_t dic_path_len = find_dic_file(buf + aff_path_len, BUFSIZE - aff_path_len);
+
+	Hunhandle *hunhandle;
+	if (aff_path_len > 0 && dic_path_len > 0 && aff_path_len + dic_path_len < BUFSIZE) {
+		hunhandle = Hunspell_create(buf, buf + aff_path_len);
+	} else {
+		// fallback to hardcoded paths
+		hunhandle = Hunspell_create(aff_path, dic_path);
+	}
 
 	if (!hunhandle || pipe(fd))
 		exec_less(argv);
