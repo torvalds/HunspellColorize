@@ -201,6 +201,7 @@ int main(int argc, char **argv)
 	}
 
 	if (fork()) {
+		Hunspell_destroy(hunhandle);
 		dup2(fd[0], 0);
 		close(fd[0]);
 		close(fd[1]);
